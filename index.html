@@ -82,6 +82,17 @@
   .plan .nota { font-size: .9rem; color: var(--suave); margin-top: auto; padding-top: 12px; }
   .pronto { margin-top: 24px; padding: 18px 22px; border-radius: 14px; border: 1px dashed #94a3b8; color: var(--suave); }
 
+  /* Así se ve */
+  .capturas-web { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 28px; }
+  .captura { margin: 0; }
+  .captura img { display: block; width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--linea); box-shadow: 0 12px 32px rgba(15, 23, 42, .12); background: #fff; }
+  .captura figcaption { margin-top: 12px; font-size: .95rem; color: var(--suave); }
+  .captura figcaption strong { color: var(--tinta); }
+  .capturas-movil { display: flex; justify-content: center; gap: clamp(12px, 4vw, 32px); margin-top: 40px; }
+  .capturas-movil .captura { flex: 0 1 260px; min-width: 0; text-align: center; }
+  .capturas-movil .captura img { border: 0; box-shadow: none; background: transparent; border-radius: 0; }
+  .aviso-demo { margin-top: 24px; font-size: .9rem; color: var(--suave); }
+
   /* Instalación */
   ol.pasos { counter-reset: paso; list-style: none; padding: 0; margin: 28px 0 0; display: grid; gap: 16px; }
   ol.pasos li { counter-increment: paso; display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 16px; align-items: start; background: #fff; border: 1px solid var(--linea); border-radius: 14px; padding: 18px 20px; }
@@ -208,7 +219,36 @@
     </div>
   </section>
 
-  <section id="planes" aria-labelledby="titulo-planes">
+  <section id="asi-se-ve" aria-labelledby="titulo-capturas">
+    <div class="contenedor">
+      <span class="etiqueta">Así se ve</span>
+      <h2 id="titulo-capturas">Un portal para cada rol</h2>
+      <p class="introduccion">En el computador, en la portería o en el celular del residente: cada quien ve lo suyo.</p>
+      <div class="capturas-web">
+        <figure class="captura">
+          <img src="assets/capturas/administracion-pqr.png" alt="Bandeja de PQR de la administración, con las solicitudes pendientes ordenadas por importancia Alta, Media y Baja" width="1280" height="800" loading="lazy">
+          <figcaption><strong>Administración.</strong> Las PQR pendientes primero, ordenadas por importancia, con filtro por motivo.</figcaption>
+        </figure>
+        <figure class="captura">
+          <img src="assets/capturas/porteria.png" alt="Pantalla de portería con el filtro por torre, las visitas autorizadas de hoy con el botón Ingresó y las remodelaciones autorizadas" width="1280" height="800" loading="lazy">
+          <figcaption><strong>Portería.</strong> Visitas autorizadas del día con un botón para marcar el ingreso, sin llamar al apartamento.</figcaption>
+        </figure>
+      </div>
+      <div class="capturas-movil">
+        <figure class="captura">
+          <img src="assets/capturas/residente-inicio.png" alt="Inicio del residente en el celular: contactos del conjunto, valor de su cuota de administración y comunicados" width="520" height="860" loading="lazy">
+          <figcaption><strong>Residente.</strong> Contactos, su cuota de administración y los comunicados.</figcaption>
+        </figure>
+        <figure class="captura">
+          <img src="assets/capturas/residente-pqr.png" alt="Formulario para radicar una PQR en el celular, con tipo, motivo y descripción" width="520" height="860" loading="lazy">
+          <figcaption><strong>PQR desde el celular.</strong> Elige el motivo y sigue el estado de su solicitud.</figcaption>
+        </figure>
+      </div>
+      <p class="aviso-demo">Capturas con datos de ejemplo de un conjunto ficticio.</p>
+    </div>
+  </section>
+
+  <section class="gris" id="planes" aria-labelledby="titulo-planes">
     <div class="contenedor">
       <span class="etiqueta">Planes</span>
       <h2 id="titulo-planes">Empieza gratis</h2>
@@ -243,7 +283,7 @@
     </div>
   </section>
 
-  <section class="gris" id="instalar" aria-labelledby="titulo-instalar">
+  <section id="instalar" aria-labelledby="titulo-instalar">
     <div class="contenedor">
       <span class="etiqueta">Instalación</span>
       <h2 id="titulo-instalar">Cómo instalarlo en tu conjunto</h2>
