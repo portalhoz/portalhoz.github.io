@@ -1,6 +1,6 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "fecha": "2026-10-26",
-  "notas": "Mi perfil con celular, correo y autorización de avisos; festivos de Colombia automáticos; tipos de vehículo a la medida del conjunto.",
-  "url": "https://portalhoz.github.io/novedades.html#v1-1-0"
+  "notas": "Nuevo módulo de mudanzas: el residente solicita la llegada o la salida con vehículo y conductor, la administración la aprueba y la portería la ve.",
+  "url": "https://portalhoz.github.io/novedades.html#v1-2-0"
 }
