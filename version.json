@@ -1,6 +1,6 @@
 {
-  "version": "1.3.0",
+  "version": "1.3.1",
   "fecha": "2026-10-26",
-  "notas": "Cuentas propias para cada persona de administración y portería; visitas registradas por portería con quién autorizó por teléfono; búsqueda de placas en las rondas.",
-  "url": "https://portalhoz.github.io/novedades.html#v1-3-0"
+  "notas": "Actualizaciones más fáciles: después de publicar la versión nueva, la estructura de datos se actualiza sola en el primer ingreso.",
+  "url": "https://portalhoz.github.io/novedades.html#v1-3-1"
 }
