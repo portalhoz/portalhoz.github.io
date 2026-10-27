@@ -1,6 +1,6 @@
 {
-  "version": "1.6.0",
-  "fecha": "2026-10-26",
-  "notas": "Multas según el reglamento (amonestación, valor fijo o cuotas de administración por reincidencia) y filtros en las reservas de la administración.",
-  "url": "https://portalhoz.github.io/novedades.html#v1-6-0"
+  "version": "1.0.0",
+  "fecha": "2026-10-27",
+  "notas": "Primera versión oficial: asambleas con quórum y votos por coeficiente, consejo y peticiones con apoyos, equipo del conjunto, coeficientes, fotos y archivos, comunicados por torre y configuración por temas.",
+  "url": "https://portalhoz.github.io/novedades.html#v1-0-0"
 }
