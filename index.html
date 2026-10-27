@@ -72,6 +72,7 @@
 
   /* Funciones y planes */
   .rejilla { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 28px; }
+  .rejilla.tres { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
   .tarjeta { background: #fff; border: 1px solid var(--linea); border-radius: 16px; padding: 24px; }
   .tarjeta ul { margin: 0; padding-left: 1.1em; }
   .tarjeta li { margin-bottom: 6px; }
@@ -141,7 +142,7 @@
       <div>
         <span class="sello">Hecho en Barranquilla</span>
         <h1 id="titulo-portada">Tu propiedad horizontal, en un solo portal.</h1>
-        <p class="bajada">Portería, reservas, PQR y administración de tu conjunto residencial en un mismo lugar. Funciona sobre Google, en la cuenta del propio conjunto, y el plan Básico es gratis.</p>
+        <p class="bajada">Portería, reservas, PQR, asambleas y administración de tu conjunto residencial en un mismo lugar. Funciona sobre Google, en la cuenta del propio conjunto, y el plan Básico es gratis.</p>
         <div class="acciones">
           <a class="boton principal" href="#instalar">Cómo instalarlo</a>
           <a class="boton borde" href="#contacto">Escríbenos</a>
@@ -151,6 +152,7 @@
         <p><span class="punto" aria-hidden="true"></span><span><strong>Residentes:</strong> reservan zonas comunes, autorizan visitas, ven sus paquetes y radican PQR desde el celular.</span></p>
         <p><span class="punto" aria-hidden="true"></span><span><strong>Portería:</strong> ve las visitas autorizadas, avisa los paquetes y lleva la minuta, con búsqueda por torre.</span></p>
         <p><span class="punto" aria-hidden="true"></span><span><strong>Administración:</strong> responde PQR por importancia, gestiona usuarios, parqueaderos y restricciones.</span></p>
+        <p><span class="punto" aria-hidden="true"></span><span><strong>Asambleas y consejo:</strong> quórum en vivo, poderes y votos por coeficiente, acta firmada y peticiones con el apoyo de los propietarios.</span></p>
         <p><span class="punto" aria-hidden="true"></span><span><strong>Sin servidores propios:</strong> los datos quedan en una hoja de cálculo del conjunto, con respaldo diario en su Drive.</span></p>
       </div>
     </div>
@@ -174,7 +176,7 @@
       <span class="etiqueta">Funciones</span>
       <h2 id="titulo-funciones">Lo que hace el portal</h2>
       <p class="introduccion">Cada persona entra con su documento y contraseña, sin necesitar cuenta de Google, y ve solo lo que le corresponde según su rol.</p>
-      <div class="rejilla">
+      <div class="rejilla tres">
         <article class="tarjeta">
           <h3>Residentes</h3>
           <ul>
@@ -219,6 +221,17 @@
           </ul>
         </article>
         <article class="tarjeta">
+          <h3>Asambleas y consejo</h3>
+          <ul>
+            <li>Convocatoria con orden del día y segunda convocatoria según la Ley 675</li>
+            <li>Poderes desde el portal o en papel</li>
+            <li>Asistencia presencial o virtual y quórum en vivo por coeficientes</li>
+            <li>Votaciones por coeficiente: mayoría, 70 % o elección de planchas</li>
+            <li>Acta con firmas y código para verificarla</li>
+            <li>Consejo en el portal y peticiones con apoyos de los propietarios</li>
+          </ul>
+        </article>
+        <article class="tarjeta">
           <h3>Seguridad y privacidad</h3>
           <ul>
             <li>Contraseñas protegidas y bloqueo por intentos</li>
@@ -247,6 +260,10 @@
           <img src="assets/capturas/porteria.png" alt="Pantalla de portería con el filtro por torre, las visitas autorizadas de hoy con el botón Ingresó y las remodelaciones autorizadas" width="1280" height="800" loading="lazy">
           <figcaption><strong>Portería.</strong> Visitas autorizadas del día con un botón para marcar el ingreso, sin llamar al apartamento.</figcaption>
         </figure>
+        <figure class="captura">
+          <img src="assets/capturas/asambleas-administracion.png" alt="Asamblea en curso en la pantalla de la administración: barra de quórum con 60 % de los coeficientes y una votación abierta con el conteo por opción" width="1280" height="800" loading="lazy">
+          <figcaption><strong>Asambleas.</strong> Quórum en vivo por coeficientes y el conteo de cada votación mientras la gente vota.</figcaption>
+        </figure>
       </div>
       <div class="capturas-movil">
         <figure class="captura">
@@ -256,6 +273,10 @@
         <figure class="captura">
           <img src="assets/capturas/residente-pqr.png" alt="Formulario para radicar una PQR en el celular, con tipo, motivo y descripción" width="520" height="860" loading="lazy">
           <figcaption><strong>PQR desde el celular.</strong> Elige el motivo y sigue el estado de su solicitud.</figcaption>
+        </figure>
+        <figure class="captura">
+          <img src="assets/capturas/asambleas-residente.png" alt="Votación abierta en el celular del propietario, con el quórum de la asamblea y los botones Sí, No y Abstención" width="520" height="860" loading="lazy">
+          <figcaption><strong>Votar desde el celular.</strong> Por su apartamento y por los que representa con poder.</figcaption>
         </figure>
       </div>
       <p class="aviso-demo">Capturas con datos de ejemplo de un conjunto ficticio.</p>
