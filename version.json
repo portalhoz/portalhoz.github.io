@@ -1,6 +1,6 @@
 {
-  "version": "1.4.1",
+  "version": "1.5.0",
   "fecha": "2026-10-26",
-  "notas": "Salón con horario nocturno: el cierre puede ser del día siguiente (ej. 01:30) y los festivos pueden cerrar a otra hora.",
-  "url": "https://portalhoz.github.io/novedades.html#v1-4-1"
+  "notas": "Salón social por jornadas: cada día con las suyas, víspera de festivo, días y fechas sin alquiler; el residente escoge una jornada libre.",
+  "url": "https://portalhoz.github.io/novedades.html#v1-5-0"
 }
