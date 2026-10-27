@@ -1,6 +1,6 @@
 {
-  "version": "1.4.0",
-  "fecha": "2026-10-27",
-  "notas": "Portería y Seguridad ordenadas en secciones con contadores; bitácora liviana con archivo mensual en Drive y descarga en Excel por fechas.",
-  "url": "https://portalhoz.github.io/novedades.html#v1-4-0"
+  "version": "1.4.1",
+  "fecha": "2026-10-26",
+  "notas": "Salón con horario nocturno: el cierre puede ser del día siguiente (ej. 01:30) y los festivos pueden cerrar a otra hora.",
+  "url": "https://portalhoz.github.io/novedades.html#v1-4-1"
 }
