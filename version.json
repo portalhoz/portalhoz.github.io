@@ -1,6 +1,6 @@
 {
-  "version": "1.9.0",
+  "version": "1.9.1",
   "fecha": "2026-10-28",
-  "notas": "Asistencia a la asamblea con código QR, paso a segunda convocatoria cuando no hay quórum, y reservas de cancha y piscina sin datos de otros apartamentos.",
-  "url": "https://portalhoz.github.io/novedades.html#v1-9-0"
+  "notas": "Las asambleas quedan solo presenciales por ahora; virtual y mixta llegan más adelante.",
+  "url": "https://portalhoz.github.io/novedades.html#v1-9-1"
 }
