@@ -1,6 +1,6 @@
 {
-  "version": "1.8.0",
-  "fecha": "2026-10-27",
-  "notas": "Bienvenida para residentes y vigilantes la primera vez que entran, y opción de cerrar la sesión abierta en otro celular para entrar.",
-  "url": "https://portalhoz.github.io/novedades.html#v1-8-0"
+  "version": "1.9.0",
+  "fecha": "2026-10-28",
+  "notas": "Asistencia a la asamblea con código QR, paso a segunda convocatoria cuando no hay quórum, y reservas de cancha y piscina sin datos de otros apartamentos.",
+  "url": "https://portalhoz.github.io/novedades.html#v1-9-0"
 }
