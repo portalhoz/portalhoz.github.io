@@ -1,6 +1,6 @@
 {
-  "version": "1.10.0",
+  "version": "1.10.1",
   "fecha": "2026-10-28",
-  "notas": "Salón social: el residente sube el comprobante de pago y la administración da el visto bueno; las reservas sin pagar se pueden liberar.",
-  "url": "https://portalhoz.github.io/novedades.html#v1-10-0"
+  "notas": "Arreglo: después de actualizar a la 1.10.0 el portal podía no cargar al entrar.",
+  "url": "https://portalhoz.github.io/novedades.html#v1-10-1"
 }
