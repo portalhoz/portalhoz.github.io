@@ -137,6 +137,37 @@
     setTimeout(() => { $('instalar').hidden = false; }, 2500);
   }
 
+  // ===== Espejo de la sesión (iPhone) =====
+  // Safari borra lo que guarda el portal (va dentro de esta página, es «de terceros») al cerrar la app.
+  // El portal nos manda copia de su sesión, documento recordado, tema y letra; aquí sí se conserva y se la devolvemos al abrir.
+  // Solo se atiende al portal que está dentro de nuestro marco: otra página o ventana no puede pedir la sesión.
+  const CLAVES_ESPEJO = ['vp3_sesion', 'ph_doc_recordado', 'ph_tema', 'ph_lectura'];
+  const PREFIJO = 'espejo:' + PORTAL.corto + ':';
+  function esDeNuestroPortal(origen) {
+    const raiz = $('portal').contentWindow;
+    if (!raiz || !origen) return false;
+    const buscar = (w, nivel) => {
+      if (w === origen) return true;
+      if (nivel > 4) return false;
+      try { for (let i = 0; i < w.frames.length; i++) if (buscar(w.frames[i], nivel + 1)) return true; } catch (e) {}
+      return false;
+    };
+    return buscar(raiz, 0);
+  }
+  window.addEventListener('message', e => {
+    const d = e.data;
+    if (!d || d.portalhoz !== 1 || !/^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/.test(e.origin) || !esDeNuestroPortal(e.source)) return;
+    if (d.tipo === 'pedir') {
+      const datos = {};
+      CLAVES_ESPEJO.forEach(k => { const v = leer(PREFIJO + k); if (v !== null) datos[k] = v; });
+      e.source.postMessage({ portalhoz: 1, tipo: 'espejo', datos }, e.origin);
+    } else if (d.tipo === 'guardar' && CLAVES_ESPEJO.indexOf(d.clave) !== -1 && typeof d.valor === 'string' && d.valor.length < 8000) {
+      guardar(PREFIJO + d.clave, d.valor);
+    } else if (d.tipo === 'borrar' && CLAVES_ESPEJO.indexOf(d.clave) !== -1) {
+      try { localStorage.removeItem(PREFIJO + d.clave); } catch (x) {}
+    }
+  });
+
   // ===== Trabajador: abrir sin internet con el aviso de «Sin conexión» =====
   if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 </script>
