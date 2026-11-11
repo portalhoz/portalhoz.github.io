@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es-CO">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Villas del Portal 3 · PortalHoz</title>
+<meta name="description" content="Portal del conjunto Villas del Portal 3: reservas, portería, PQR y comunicados.">
+<meta name="theme-color" content="#047857">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Villas">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<style>
+  /* App de PortalHoz para un conjunto: el portal (Apps Script) a pantalla completa, con ícono y sin la barra del navegador */
+  :root { --verde: #047857; --fondo: #ffffff; --texto: #0f172a; --suave: #64748b; --borde: #e2e8f0; --aviso: #f0fdf4; }
+  @media (prefers-color-scheme: dark) { :root { --fondo: #0f172a; --texto: #e2e8f0; --suave: #94a3b8; --borde: #334155; --aviso: #064e3b; } }
+  html, body { margin: 0; height: 100%; background: var(--fondo); color: var(--texto); font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  #portal { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; display: block; background: var(--fondo); }
+  .pantalla { position: fixed; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 24px; text-align: center; background: var(--fondo); z-index: 5; transition: opacity .3s; }
+  .pantalla.oculta { opacity: 0; pointer-events: none; }
+  .pantalla[hidden] { display: none; }
+  .pantalla img { width: 96px; height: 96px; }
+  .nombre { font-size: 20px; font-weight: 800; }
+  .con { font-size: 12px; color: var(--suave); }
+  .con b { color: var(--verde); }
+  .girando { width: 28px; height: 28px; border-radius: 50%; border: 3px solid var(--borde); border-top-color: var(--verde); animation: girar .8s linear infinite; }
+  @keyframes girar { to { transform: rotate(360deg); } }
+  .boton { background: var(--verde); color: #fff; border: 0; border-radius: 10px; padding: 12px 22px; font-size: 15px; font-weight: 700; cursor: pointer; }
+  .texto { max-width: 320px; color: var(--suave); font-size: 14px; line-height: 1.45; margin: 0; }
+  /* Aviso para instalar (arriba, para no tapar la barra de pestañas del portal) */
+  #instalar { position: fixed; left: 8px; right: 8px; top: calc(8px + env(safe-area-inset-top, 0px)); z-index: 6; display: flex; align-items: center; gap: 10px;
+              background: var(--aviso); border: 1px solid var(--verde); border-radius: 12px; padding: 10px 12px; font-size: 13px; box-shadow: 0 4px 16px rgba(15, 23, 42, .15); }
+  #instalar[hidden] { display: none; }
+  #instalar img { width: 32px; height: 32px; flex-shrink: 0; }
+  #instalar span { flex: 1; min-width: 0; }
+  #instalar button { border: 0; background: none; cursor: pointer; font-size: 13px; font-weight: 700; color: var(--verde); padding: 6px; }
+  @media (prefers-reduced-motion: reduce) { .girando { animation-duration: 2s; } .pantalla { transition: none; } }
+</style>
+</head>
+<body>
+  <!-- Bienvenida mientras carga el portal -->
+  <div id="bienvenida" class="pantalla" role="status" aria-live="polite">
+    <img src="../assets/portalhoz-icono-512.png" alt="">
+    <div class="nombre" id="nombreConjunto">Villas del Portal 3</div>
+    <div class="girando" aria-hidden="true"></div>
+    <div class="con">con <b>PortalHoz</b></div>
+  </div>
+
+  <!-- Sin internet -->
+  <div id="sinConexion" class="pantalla" hidden>
+    <img src="../assets/portalhoz-icono-512.png" alt="">
+    <div class="nombre">Sin conexión</div>
+    <p class="texto">Este celular no tiene internet. Revisa el wifi o los datos y vuelve a intentar.</p>
+    <button type="button" class="boton" onclick="location.reload()">Reintentar</button>
+  </div>
+
+  <!-- Invitación a instalar (Android: botón; iPhone: cómo hacerlo) -->
+  <div id="instalar" hidden>
+    <img src="../assets/portalhoz-icono-192.png" alt="">
+    <span id="instalarTexto">Instala la app de Villas en tu celular.</span>
+    <button type="button" id="instalarSi" hidden>Instalar</button>
+    <button type="button" id="instalarNo" aria-label="Cerrar">✕</button>
+  </div>
+
+  <iframe id="portal" title="Villas del Portal 3" allow="clipboard-write; web-share; camera" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+<script>
+  // ===== Lo único que cambia por conjunto =====
+  const PORTAL = {
+    nombre: 'Villas del Portal 3',
+    corto: 'Villas',
+    // Dirección de la implementación de Apps Script (Implementar → Administrar implementaciones → URL de la app web)
+    url: 'https://script.google.com/macros/s/AKfycbzo63zWxa8WwbRZBXkRnk-9yG_qsGDuZrX03SLzdg27yrHkZa45gmWZH1kafI14dLa7XQ/exec'
+  };
+
+  const $ = id => document.getElementById(id);
+  const leer = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+  const guardar = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+  $('nombreConjunto').textContent = PORTAL.nombre;
+
+  function mostrarSinConexion() { $('bienvenida').hidden = true; $('sinConexion').hidden = false; }
+  function quitarBienvenida() { const b = $('bienvenida'); b.classList.add('oculta'); setTimeout(() => { b.hidden = true; }, 350); }
+
+  if (!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(PORTAL.url)) {
+    $('bienvenida').querySelector('.girando').remove();
+    $('bienvenida').insertAdjacentHTML('beforeend', '<p class="texto">Falta configurar la dirección del portal.</p>');
+  } else if (navigator.onLine === false) {
+    mostrarSinConexion();
+  } else {
+    const f = $('portal');
+    f.addEventListener('load', quitarBienvenida);
+    setTimeout(quitarBienvenida, 15000);   // por si el navegador no avisa que terminó
+    f.src = PORTAL.url;
+  }
+  window.addEventListener('online', () => { if (!$('sinConexion').hidden) location.reload(); });
+
+  // ===== Instalar como app =====
+  const instalada = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  const yaCerro = () => leer('ph_instalar_cerrado') === '1';
+  $('instalarNo').onclick = () => { $('instalar').hidden = true; guardar('ph_instalar_cerrado', '1'); };
+  let pedido = null;
+  // Android / Chrome: el navegador ofrece instalar; mostramos nuestro botón
+  window.addEventListener('beforeinstallprompt', e => {
+    e.preventDefault(); pedido = e;
+    if (instalada || yaCerro()) return;
+    $('instalarTexto').textContent = 'Instala la app de ' + PORTAL.corto + ': queda con su ícono en tu celular.';
+    $('instalarSi').hidden = false; $('instalar').hidden = false;
+  });
+  $('instalarSi').onclick = async () => {
+    if (!pedido) return;
+    pedido.prompt();
+    try { await pedido.userChoice; } catch (e) {}
+    pedido = null; $('instalar').hidden = true;
+  };
+  window.addEventListener('appinstalled', () => { $('instalar').hidden = true; guardar('ph_instalar_cerrado', '1'); });
+  // iPhone / iPad (Safari no tiene botón de instalar): explicar los dos toques
+  const esIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (esIOS && !instalada && !yaCerro()) {
+    $('instalarTexto').innerHTML = 'Para tenerla como app: toca <b>Compartir</b> <span aria-hidden="true">⬆️</span> y luego <b>«Agregar a inicio»</b>.';
+    setTimeout(() => { $('instalar').hidden = false; }, 2500);
+  }
+
+  // ===== Trabajador: abrir sin internet con el aviso de «Sin conexión» =====
+  if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+</script>
+</body>
+</html>
