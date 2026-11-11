@@ -102,14 +102,28 @@
   const yaCerro = () => leer('ph_instalar_cerrado') === '1';
   $('instalarNo').onclick = () => { $('instalar').hidden = true; guardar('ph_instalar_cerrado', '1'); };
   let pedido = null;
-  // Android / Chrome: el navegador ofrece instalar; mostramos nuestro botón
+  // En Android solo Chrome arma la app con los servidores de Google para el Android actual.
+  // Edge, Samsung, Opera y otros la arman para Android antiguo y Google Play Protect la bloquea como «app no segura».
+  // Por eso «Instalar» solo se ofrece en Chrome; en los demás, un botón para abrir esta misma página en Chrome.
+  const ua = navigator.userAgent;
+  const esAndroid = /Android/i.test(ua);
+  const esChromeAndroid = esAndroid && /Chrome\//.test(ua) && !/EdgA|SamsungBrowser|OPR|Opera|Firefox|FxiOS|YaBrowser|MiuiBrowser|HeyTapBrowser|UCBrowser|DuckDuckGo|; wv\)/i.test(ua);
+  if (esAndroid && !esChromeAndroid && !instalada && !yaCerro()) {
+    const enChrome = 'intent://' + location.host + location.pathname + '#Intent;scheme=https;package=com.android.chrome;S.browser_fallback_url=' + encodeURIComponent('https://play.google.com/store/apps/details?id=com.android.chrome') + ';end';
+    $('instalarTexto').textContent = 'Para instalar la app de ' + PORTAL.corto + ' en tu celular, ábrela en Chrome.';
+    $('instalarSi').textContent = 'Abrir en Chrome';
+    $('instalarSi').onclick = () => { location.href = enChrome; };
+    $('instalarSi').hidden = false;
+    setTimeout(() => { $('instalar').hidden = false; }, 2000);
+  }
+  // Android con Chrome: el navegador ofrece instalar; mostramos nuestro botón
   window.addEventListener('beforeinstallprompt', e => {
     e.preventDefault(); pedido = e;
-    if (instalada || yaCerro()) return;
+    if (instalada || yaCerro() || !esChromeAndroid && esAndroid || /iPhone|iPad|iPod/.test(ua)) return;
     $('instalarTexto').textContent = 'Instala la app de ' + PORTAL.corto + ': queda con su ícono en tu celular.';
     $('instalarSi').hidden = false; $('instalar').hidden = false;
   });
-  $('instalarSi').onclick = async () => {
+  if (!esAndroid || esChromeAndroid) $('instalarSi').onclick = async () => {
     if (!pedido) return;
     pedido.prompt();
     try { await pedido.userChoice; } catch (e) {}

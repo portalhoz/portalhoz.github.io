@@ -1,7 +1,7 @@
 // Trabajador de la app de PortalHoz (solo esta carpeta).
 // Guarda la portada y los íconos para que, sin internet, la app abra y muestre «Sin conexión» en lugar del error del navegador.
 // El portal en sí (Apps Script) nunca se guarda aquí: siempre se pide en vivo.
-const VERSION = 'villas-v1';
+const VERSION = 'villas-v2';
 const BASICOS = ['./', './index.html', './manifest.webmanifest', '../assets/portalhoz-icono-192.png', '../assets/portalhoz-icono-512.png'];
 
 self.addEventListener('install', e => {
