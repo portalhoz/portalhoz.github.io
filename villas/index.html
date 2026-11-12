@@ -33,7 +33,11 @@
   /* Aviso para instalar (arriba, para no tapar la barra de pestañas del portal) */
   #instalar { position: fixed; left: 8px; right: 8px; top: calc(8px + env(safe-area-inset-top, 0px)); z-index: 6; display: flex; align-items: center; gap: 10px;
               background: var(--aviso); border: 1px solid var(--verde); border-radius: 12px; padding: 10px 12px; font-size: 13px; box-shadow: 0 4px 16px rgba(15, 23, 42, .15); }
-  #instalar[hidden] { display: none; }
+  #instalar[hidden], #avisos[hidden] { display: none; }
+  #avisos { position: fixed; left: 8px; right: 8px; top: calc(8px + env(safe-area-inset-top, 0px)); z-index: 6; display: flex; align-items: center; gap: 10px;
+            background: var(--aviso); border: 1px solid var(--verde); border-radius: 12px; padding: 10px 12px; font-size: 13px; box-shadow: 0 4px 16px rgba(15, 23, 42, .15); }
+  #avisos span { flex: 1; min-width: 0; }
+  #avisos button { border: 0; background: none; cursor: pointer; font-size: 13px; font-weight: 700; color: var(--verde); padding: 6px; }
   #instalar img { width: 32px; height: 32px; flex-shrink: 0; }
   #instalar span { flex: 1; min-width: 0; }
   #instalar button { border: 0; background: none; cursor: pointer; font-size: 13px; font-weight: 700; color: var(--verde); padding: 6px; }
@@ -58,6 +62,14 @@
   </div>
 
   <!-- Invitación a instalar (Android: botón; iPhone: cómo hacerlo) -->
+  <!-- Activar las notificaciones de este celular (solo si el conjunto tiene el servicio) -->
+  <div id="avisos" hidden>
+    <span aria-hidden="true">🔔</span>
+    <span id="avisosTexto">Activa los avisos para saber cuándo llega un pedido o entra tu visita.</span>
+    <button type="button" id="avisosSi">Activar</button>
+    <button type="button" id="avisosNo" aria-label="Cerrar">✕</button>
+  </div>
+
   <div id="instalar" hidden>
     <img src="../assets/portalhoz-icono-192.png" alt="">
     <span id="instalarTexto">Instala la app de Villas en tu celular.</span>
@@ -160,13 +172,63 @@
     if (d.tipo === 'pedir') {
       const datos = {};
       CLAVES_ESPEJO.forEach(k => { const v = leer(PREFIJO + k); if (v !== null) datos[k] = v; });
-      e.source.postMessage({ portalhoz: 1, tipo: 'espejo', datos }, e.origin);
+      portalVentana = e.source; portalOrigen = e.origin;
+      const msg = { portalhoz: 1, tipo: 'espejo', datos };
+      const tk = leer(LS_PUSH);
+      if (tk) { msg.pushToken = tk; msg.plataforma = plataformaPush(); }
+      e.source.postMessage(msg, e.origin);
     } else if (d.tipo === 'guardar' && CLAVES_ESPEJO.indexOf(d.clave) !== -1 && typeof d.valor === 'string' && d.valor.length < 8000) {
       guardar(PREFIJO + d.clave, d.valor);
     } else if (d.tipo === 'borrar' && CLAVES_ESPEJO.indexOf(d.clave) !== -1) {
       try { localStorage.removeItem(PREFIJO + d.clave); } catch (x) {}
     }
   });
+
+  // ===== Notificaciones push (Firebase) =====
+  // La persona toca «Activar»: el celular da permiso, Firebase entrega un token y se le pasa al portal, que lo
+  // guarda a nombre de quien tiene la sesión. En iPhone solo funciona con la app instalada (Compartir → Agregar a inicio).
+  const FIREBASE = {};   // vacío: el conjunto no tiene el servicio de notificaciones
+  const LS_PUSH = 'push:' + PORTAL.corto;
+  let portalVentana = null, portalOrigen = '';
+  function plataformaPush() { return esAndroidPush() ? 'Android' : (/iPhone|iPad|iPod/.test(navigator.userAgent) ? 'iPhone' : 'Otro'); }
+  function esAndroidPush() { return /Android/i.test(navigator.userAgent); }
+  const pushPosible = () => !!(FIREBASE && FIREBASE.apiKey && 'Notification' in window && 'serviceWorker' in navigator && 'PushManager' in window);
+  function avisarPortalPush(tk) { if (portalVentana && portalOrigen) { try { portalVentana.postMessage({ portalhoz: 1, tipo: 'push', token: tk, plataforma: plataformaPush() }, portalOrigen); } catch (e) {} } }
+  function cargarScript(src) { return new Promise((ok, mal) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = mal; document.head.appendChild(s); }); }
+  async function tokenPush() {
+    if (!window.firebase || !window.firebase.messaging) {
+      await cargarScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');
+      await cargarScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
+    }
+    if (!firebase.apps.length) firebase.initializeApp(FIREBASE);
+    const reg = await navigator.serviceWorker.ready;
+    return firebase.messaging().getToken({ vapidKey: FIREBASE.vapidKey, serviceWorkerRegistration: reg });
+  }
+  async function activarAvisos() {
+    $('avisos').hidden = true;
+    try {
+      const permiso = await Notification.requestPermission();
+      if (permiso !== 'granted') { guardar('ph_avisos_cerrado', '1'); return; }
+      const tk = await tokenPush();
+      if (!tk) return;
+      guardar(LS_PUSH, tk);
+      avisarPortalPush(tk);
+    } catch (e) { /* sin avisos: el portal sigue funcionando igual */ }
+  }
+  $('avisosSi').onclick = activarAvisos;
+  $('avisosNo').onclick = () => { $('avisos').hidden = true; guardar('ph_avisos_cerrado', '1'); };
+  if (pushPosible()) {
+    if (Notification.permission === 'granted') {
+      // Ya activados: se confirma el token (Firebase lo cambia de vez en cuando) y se avisa al portal si cambió
+      window.addEventListener('load', () => setTimeout(async () => {
+        try { const tk = await tokenPush(); if (tk && tk !== leer(LS_PUSH)) { guardar(LS_PUSH, tk); avisarPortalPush(tk); } } catch (e) {}
+      }, 3000));
+    } else if (Notification.permission !== 'denied' && leer('ph_avisos_cerrado') !== '1' && (instalada || !/iPhone|iPad|iPod/.test(navigator.userAgent))) {
+      // Se ofrece después de la invitación a instalar (nunca las dos a la vez)
+      setTimeout(() => { if ($('instalar').hidden) $('avisos').hidden = false; }, 6000);
+    }
+  }
+
 
   // ===== Trabajador: abrir sin internet con el aviso de «Sin conexión» =====
   if ('serviceWorker' in navigator) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));

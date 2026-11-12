@@ -1,7 +1,14 @@
 // Trabajador de la app de PortalHoz (solo esta carpeta).
 // Guarda la portada y los íconos para que, sin internet, la app abra y muestre «Sin conexión» en lugar del error del navegador.
 // El portal en sí (Apps Script) nunca se guarda aquí: siempre se pide en vivo.
-const VERSION = 'villas-7cced82f';
+const VERSION = 'villas-f3a11538';
+// Notificaciones push (Firebase): con la app cerrada las muestra y, al tocarlas, abre la app
+const FIREBASE = {};
+if (FIREBASE && FIREBASE.apiKey) {
+  importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js', 'https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
+  firebase.initializeApp(FIREBASE);
+  firebase.messaging();
+}
 const BASICOS = ['./', './index.html', './manifest.webmanifest', '../assets/portalhoz-icono-192.png', '../assets/portalhoz-icono-512.png'];
 
 self.addEventListener('install', e => {
