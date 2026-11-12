@@ -3,7 +3,7 @@
 // El portal en sí (Apps Script) nunca se guarda aquí: siempre se pide en vivo.
 const VERSION = 'villas-f3a11538';
 // Notificaciones push (Firebase): con la app cerrada las muestra y, al tocarlas, abre la app
-const FIREBASE = {};
+const FIREBASE = {"apiKey":"AIzaSyATzX3vYeqccR35srcw2-4wlRG8nMTBMfs","authDomain":"portalhoz.firebaseapp.com","projectId":"portalhoz","messagingSenderId":"272717077640","appId":"1:272717077640:web:95bdcd0692437a4065d33d","vapidKey":"BBG9WAgRLivz_EfX7hAhuFZQFHNjWQvGSLBkowCD8jbTgDoqpE8BjG6Wx599qjg8-Oeme-9AgbRXpaXfVkd7OF0"};
 if (FIREBASE && FIREBASE.apiKey) {
   importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js', 'https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
   firebase.initializeApp(FIREBASE);
