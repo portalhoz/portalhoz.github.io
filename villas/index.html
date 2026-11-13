@@ -103,8 +103,10 @@
     mostrarSinConexion();
   } else {
     const f = $('portal');
-    f.addEventListener('load', quitarBienvenida);
-    setTimeout(quitarBienvenida, 15000);   // por si el navegador no avisa que terminó
+    // La bienvenida sigue hasta que el portal avisa «listo» (ya verificó la sesión y pintó la pantalla), no solo
+    // cuando carga el marco: así no queda una pantalla vacía mientras el servidor responde
+    f.addEventListener('load', () => setTimeout(quitarBienvenida, 8000));   // portal viejo que no avisa
+    setTimeout(quitarBienvenida, 20000);   // por si el navegador no avisa que terminó
     f.src = PORTAL.url;
   }
   window.addEventListener('online', () => { if (!$('sinConexion').hidden) location.reload(); });
@@ -169,7 +171,9 @@
   window.addEventListener('message', e => {
     const d = e.data;
     if (!d || d.portalhoz !== 1 || !/^https:\/\/[a-z0-9-]+\.googleusercontent\.com$/.test(e.origin) || !esDeNuestroPortal(e.source)) return;
-    if (d.tipo === 'pedir') {
+    if (d.tipo === 'listo') {
+      quitarBienvenida();
+    } else if (d.tipo === 'pedir') {
       const datos = {};
       CLAVES_ESPEJO.forEach(k => { const v = leer(PREFIJO + k); if (v !== null) datos[k] = v; });
       portalVentana = e.source; portalOrigen = e.origin;
