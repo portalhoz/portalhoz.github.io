@@ -1,17 +1,18 @@
 // Trabajador de la app de PortalHoz (solo esta carpeta).
 // Guarda la portada y los íconos para que, sin internet, la app abra y muestre «Sin conexión» en lugar del error del navegador.
 // El portal en sí (Apps Script) nunca se guarda aquí: siempre se pide en vivo.
-const VERSION = 'villas-74e26d3a';
+const VERSION = 'villas-c2a04752';
 // Notificaciones push (Firebase Cloud Messaging): llegan solo con datos y este trabajador las muestra SIEMPRE,
 // con la app abierta o cerrada (la librería de Firebase no las muestra si la app está a la vista).
 // Al tocarla abre la app (o la trae al frente si ya está abierta).
 self.addEventListener('push', e => {
   let j = {};
   try { j = e.data ? e.data.json() : {}; } catch (x) { j = {}; }
-  const d = j.data || {}, n = j.notification || {};
+  // FCM entrega lo que mandó el servicio dentro de «data» (por si acaso, también se mira afuera y en «notification»)
+  const d = (j && typeof j.data === 'object' && j.data) || j || {}, n = (j && j.notification) || {};
   const titulo = d.titulo || n.title || 'Villas del Portal 3';
   e.waitUntil(self.registration.showNotification(titulo, {
-    body: d.texto || n.body || '', icon: '../assets/portalhoz-icono-192.png', badge: '../assets/portalhoz-icono-192.png',
+    body: d.texto || n.body || 'Tienes un aviso nuevo en el portal.', icon: '../assets/portalhoz-icono-192.png', badge: '../assets/portalhoz-icono-192.png',
     tag: (d.tipo || 'aviso') + '-' + Date.now(), data: { enlace: d.enlace || '' }
   }));
 });
