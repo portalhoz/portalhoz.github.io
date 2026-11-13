@@ -1,14 +1,28 @@
 // Trabajador de la app de PortalHoz (solo esta carpeta).
 // Guarda la portada y los íconos para que, sin internet, la app abra y muestre «Sin conexión» en lugar del error del navegador.
 // El portal en sí (Apps Script) nunca se guarda aquí: siempre se pide en vivo.
-const VERSION = 'villas-3b66a29e';
-// Notificaciones push (Firebase): con la app cerrada las muestra y, al tocarlas, abre la app
-const FIREBASE = {"apiKey":"AIzaSyATzX3vYeqccR35srcw2-4wlRG8nMTBMfs","authDomain":"portalhoz.firebaseapp.com","projectId":"portalhoz","messagingSenderId":"272717077640","appId":"1:272717077640:web:95bdcd0692437a4065d33d","vapidKey":"BBG9WAgRLivz_EfX7hAhuFZQFHNjWQvGSLBkowCD8jbTgDoqpE8BjG6Wx599qjg8-Oeme-9AgbRXpaXfVkd7OF0"};
-if (FIREBASE && FIREBASE.apiKey) {
-  importScripts('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js', 'https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
-  firebase.initializeApp(FIREBASE);
-  firebase.messaging();
-}
+const VERSION = 'villas-3ba07bdc';
+// Notificaciones push (Firebase Cloud Messaging): llegan solo con datos y este trabajador las muestra SIEMPRE,
+// con la app abierta o cerrada (la librería de Firebase no las muestra si la app está a la vista).
+// Al tocarla abre la app (o la trae al frente si ya está abierta).
+self.addEventListener('push', e => {
+  let j = {};
+  try { j = e.data ? e.data.json() : {}; } catch (x) { j = {}; }
+  const d = j.data || {}, n = j.notification || {};
+  const titulo = d.titulo || n.title || 'Villas del Portal 3';
+  e.waitUntil(self.registration.showNotification(titulo, {
+    body: d.texto || n.body || '', icon: '../assets/portalhoz-icono-192.png', badge: '../assets/portalhoz-icono-192.png',
+    tag: (d.tipo || 'aviso') + '-' + Date.now(), data: { enlace: d.enlace || '' }
+  }));
+});
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  const app = new URL('./', self.registration.scope).href;
+  e.waitUntil(self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(ws => {
+    const abierta = ws.find(w => w.url.indexOf(app) === 0);
+    return abierta ? abierta.focus() : self.clients.openWindow(app);
+  }));
+});
 const BASICOS = ['./', './index.html', './manifest.webmanifest', '../assets/portalhoz-icono-192.png', '../assets/portalhoz-icono-512.png'];
 
 self.addEventListener('install', e => {

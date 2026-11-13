@@ -206,16 +206,8 @@
     }
     if (!firebase.apps.length) firebase.initializeApp(FIREBASE);
     const reg = await navigator.serviceWorker.ready;
-    const m = firebase.messaging();
-    // Con la app abierta Firebase no muestra nada (le entrega el aviso a la página): se muestra aquí igual
-    if (!window.__phOnMessage && m.onMessage) {
-      window.__phOnMessage = true;
-      m.onMessage(p => {
-        const n = (p && p.notification) || {};
-        try { reg.showNotification(n.title || PORTAL.nombre, { body: n.body || '', icon: '../assets/portalhoz-icono-192.png', tag: (p.data && p.data.tipo) || 'aviso' }); } catch (e) {}
-      });
-    }
-    return m.getToken({ vapidKey: FIREBASE.vapidKey, serviceWorkerRegistration: reg });
+    // Los avisos los muestra sw.js (abierta o cerrada la app); aquí solo se obtiene el token de este celular
+    return firebase.messaging().getToken({ vapidKey: FIREBASE.vapidKey, serviceWorkerRegistration: reg });
   }
   async function activarAvisos() {
     $('avisos').hidden = true;
