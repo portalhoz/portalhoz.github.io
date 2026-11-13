@@ -197,7 +197,8 @@
   function plataformaPush() { return esAndroidPush() ? 'Android' : (/iPhone|iPad|iPod/.test(navigator.userAgent) ? 'iPhone' : 'Otro'); }
   function esAndroidPush() { return /Android/i.test(navigator.userAgent); }
   const pushPosible = () => !!(FIREBASE && FIREBASE.apiKey && 'Notification' in window && 'serviceWorker' in navigator && 'PushManager' in window);
-  function avisarPortalPush(tk) { if (portalVentana && portalOrigen) { try { portalVentana.postMessage({ portalhoz: 1, tipo: 'push', token: tk, plataforma: plataformaPush() }, portalOrigen); } catch (e) {} } }
+  // «anterior»: el token que tenía este celular, para que el portal lo reemplace en el mismo renglón
+  function avisarPortalPush(tk, anterior) { if (portalVentana && portalOrigen) { try { portalVentana.postMessage({ portalhoz: 1, tipo: 'push', token: tk, anterior: anterior || '', plataforma: plataformaPush() }, portalOrigen); } catch (e) {} } }
   function cargarScript(src) { return new Promise((ok, mal) => { const s = document.createElement('script'); s.src = src; s.onload = ok; s.onerror = mal; document.head.appendChild(s); }); }
   async function tokenPush() {
     if (!window.firebase || !window.firebase.messaging) {
@@ -216,8 +217,9 @@
       if (permiso !== 'granted') { guardar('ph_avisos_cerrado', '1'); return; }
       const tk = await tokenPush();
       if (!tk) return;
+      const ant = leer(LS_PUSH);
       guardar(LS_PUSH, tk);
-      avisarPortalPush(tk);
+      avisarPortalPush(tk, ant !== tk ? ant : '');
     } catch (e) { /* sin avisos: el portal sigue funcionando igual */ }
   }
   $('avisosSi').onclick = activarAvisos;
@@ -226,7 +228,7 @@
     if (Notification.permission === 'granted') {
       // Ya activados: se confirma el token (Firebase lo cambia de vez en cuando) y se avisa al portal si cambió
       window.addEventListener('load', () => setTimeout(async () => {
-        try { const tk = await tokenPush(); if (tk && tk !== leer(LS_PUSH)) { guardar(LS_PUSH, tk); avisarPortalPush(tk); } } catch (e) {}
+        try { const tk = await tokenPush(); const ant = leer(LS_PUSH); if (tk && tk !== ant) { guardar(LS_PUSH, tk); avisarPortalPush(tk, ant); } } catch (e) {}
       }, 3000));
     } else if (Notification.permission !== 'denied' && leer('ph_avisos_cerrado') !== '1' && (instalada || !/iPhone|iPad|iPod/.test(navigator.userAgent))) {
       // Se ofrece después de la invitación a instalar (nunca las dos a la vez)

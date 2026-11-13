@@ -1,7 +1,7 @@
 // Trabajador de la app de PortalHoz (solo esta carpeta).
 // Guarda la portada y los íconos para que, sin internet, la app abra y muestre «Sin conexión» en lugar del error del navegador.
 // El portal en sí (Apps Script) nunca se guarda aquí: siempre se pide en vivo.
-const VERSION = 'villas-3ba07bdc';
+const VERSION = 'villas-74e26d3a';
 // Notificaciones push (Firebase Cloud Messaging): llegan solo con datos y este trabajador las muestra SIEMPRE,
 // con la app abierta o cerrada (la librería de Firebase no las muestra si la app está a la vista).
 // Al tocarla abre la app (o la trae al frente si ya está abierta).
