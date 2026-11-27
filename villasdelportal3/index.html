@@ -107,7 +107,8 @@
     // cuando carga el marco: así no queda una pantalla vacía mientras el servidor responde
     f.addEventListener('load', () => setTimeout(quitarBienvenida, 8000));   // portal viejo que no avisa
     setTimeout(quitarBienvenida, 20000);   // por si el navegador no avisa que terminó
-    f.src = PORTAL.url;
+    // El QR de «Recibe tu contraseña» abre la app con ?activar=1: se le pasa al portal (solo ese parámetro)
+    f.src = PORTAL.url + (new URLSearchParams(location.search).get('activar') ? '?activar=1' : '');
   }
   window.addEventListener('online', () => { if (!$('sinConexion').hidden) location.reload(); });
 
