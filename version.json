@@ -1,6 +1,6 @@
 {
   "version": "1.13.0",
   "fecha": "2026-11-27",
-  "notas": "Contraseñas por QR: un solo QR y un código de seguridad para que cada propietario vea su contraseña temporal, una sola vez, sin enviarla uno a uno.",
+  "notas": "Contraseñas por QR para el primer ingreso de propietarios y acuerdos de pago registrados y revisados desde la misma carga de cartera.",
   "url": "https://portalhoz.github.io/novedades.html#v1-13-0"
 }
