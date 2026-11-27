@@ -1,6 +1,6 @@
 {
-  "version": "1.11.0",
-  "fecha": "2026-11-15",
-  "notas": "Versión estable: cartera y paz y salvo, avisos al celular, código de pase, documentos, encuestas, Mi hogar, mantenimiento e informe mensual. Desde aquí solo arreglos.",
-  "url": "https://portalhoz.github.io/novedades.html#v1-11-0"
+  "version": "1.11.1",
+  "fecha": "2026-11-26",
+  "notas": "Arreglo para conjuntos grandes: con muchas personas guardando al mismo tiempo, nada se pisa ni se lee viejo, y si el portal está ocupado lo dice y deja reintentar.",
+  "url": "https://portalhoz.github.io/novedades.html#v1-11-1"
 }
