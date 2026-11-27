@@ -1,6 +1,6 @@
 {
-  "version": "1.12.0",
+  "version": "1.13.0",
   "fecha": "2026-11-27",
-  "notas": "Recibos en portería: portería avisa cuáles recibos llegaron y de qué mes, y los residentes lo ven en su inicio con una notificación solo informativa.",
-  "url": "https://portalhoz.github.io/novedades.html#v1-12-0"
+  "notas": "Contraseñas por QR: un solo QR y un código de seguridad para que cada propietario vea su contraseña temporal, una sola vez, sin enviarla uno a uno.",
+  "url": "https://portalhoz.github.io/novedades.html#v1-13-0"
 }
