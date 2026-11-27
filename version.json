@@ -1,6 +1,6 @@
 {
   "version": "1.11.1",
   "fecha": "2026-11-26",
-  "notas": "Arreglo para conjuntos grandes: con muchas personas guardando al mismo tiempo, nada se pisa ni se lee viejo, y si el portal está ocupado lo dice y deja reintentar.",
+  "notas": "Arreglo para conjuntos grandes: con muchas personas guardando al mismo tiempo, nada se pisa ni se lee viejo, si el portal está ocupado lo dice y deja reintentar, y portería ya no hace recargar a todo el conjunto.",
   "url": "https://portalhoz.github.io/novedades.html#v1-11-1"
 }
