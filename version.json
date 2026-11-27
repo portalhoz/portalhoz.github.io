@@ -1,6 +1,6 @@
 {
-  "version": "1.11.2",
+  "version": "1.12.0",
   "fecha": "2026-11-27",
-  "notas": "La administración abre más rápido: cada pestaña carga lo suyo cuando se abre, y al guardar solo se actualiza la pestaña en la que estás.",
-  "url": "https://portalhoz.github.io/novedades.html#v1-11-2"
+  "notas": "Recibos en portería: portería avisa cuáles recibos llegaron y de qué mes, y los residentes lo ven en su inicio con una notificación solo informativa.",
+  "url": "https://portalhoz.github.io/novedades.html#v1-12-0"
 }
