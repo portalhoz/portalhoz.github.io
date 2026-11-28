@@ -108,7 +108,8 @@
     f.addEventListener('load', () => setTimeout(quitarBienvenida, 8000));   // portal viejo que no avisa
     setTimeout(quitarBienvenida, 20000);   // por si el navegador no avisa que terminó
     // El QR de «Recibe tu contraseña» abre la app con ?activar=1: se le pasa al portal (solo ese parámetro)
-    f.src = PORTAL.url + (new URLSearchParams(location.search).get('activar') ? '?activar=1' : '');
+    const qs = new URLSearchParams(location.search), ver = String(qs.get('verificar') || '').replace(/[^0-9A-Fa-f]/g, '').slice(0, 12);
+    f.src = PORTAL.url + (qs.get('activar') ? '?activar=1' : ver.length === 12 ? '?verificar=' + ver : '');
   }
   window.addEventListener('online', () => { if (!$('sinConexion').hidden) location.reload(); });
 
