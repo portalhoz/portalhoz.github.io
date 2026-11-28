@@ -61,6 +61,14 @@
     <button type="button" class="boton" onclick="location.reload()">Reintentar</button>
   </div>
 
+  <!-- Mantenimiento: lo activa el archivo mantenimiento.json de esta carpeta del sitio ({"activo": true}) -->
+  <div id="mantenimiento" class="pantalla" hidden>
+    <img src="../assets/portalhoz-icono-512.png" alt="">
+    <div class="nombre">Estamos en mantenimiento</div>
+    <p class="texto" id="mantenimientoTexto">El portal no está disponible en este momento. Vuelve a intentar en un rato.</p>
+    <button type="button" class="boton" onclick="location.reload()">Reintentar</button>
+  </div>
+
   <!-- Invitación a instalar (Android: botón; iPhone: cómo hacerlo) -->
   <!-- Activar las notificaciones de este celular (solo si el conjunto tiene el servicio) -->
   <div id="avisos" hidden>
@@ -102,6 +110,20 @@
   } else if (navigator.onLine === false) {
     mostrarSinConexion();
   } else {
+    // ¿Mantenimiento? Se revisa mantenimiento.json (junto a esta página) antes de abrir el portal. Sirve cuando el
+    // portal no puede responder (por ejemplo, publicado desde otra cuenta): se cambia ese archivo en GitHub y listo.
+    // Si no existe, no responde en 3 s o no dice "activo": true, el portal abre normal.
+    const espera = new Promise(r => setTimeout(() => r(null), 3000));
+    const consulta = typeof fetch !== 'function' ? Promise.resolve(null)
+      : fetch('mantenimiento.json?t=' + Date.now(), { cache: 'no-store' }).then(r => (r.ok ? r.json() : null)).catch(() => null);
+    Promise.race([consulta, espera]).then(j => {
+      if (j && j.activo === true) {
+        if (j.mensaje) $('mantenimientoTexto').textContent = String(j.mensaje).slice(0, 300);
+        $('bienvenida').hidden = true; $('mantenimiento').hidden = false;
+      } else abrirPortal();
+    });
+  }
+  function abrirPortal() {
     const f = $('portal');
     // La bienvenida sigue hasta que el portal avisa «listo» (ya verificó la sesión y pintó la pantalla), no solo
     // cuando carga el marco: así no queda una pantalla vacía mientras el servidor responde
